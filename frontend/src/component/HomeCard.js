@@ -1,18 +1,19 @@
 import React from 'react'
 import { Link } from 'react-router-dom';
+import backgroundImage from '../assest/Vegetarian Green Fruits And Vegetables Seamless Pattern Background Wallpaper Image For Free Download - Pngtree.jpeg';
 
 const Homecard = ({name,image,category,price, loading,id}) => {
   return (
-    <div className='bg-white shadow-md p-2 rounded min-w-[150px]'>
+<div className='shadow-md p-2 rounded min-w-[150px] min-h-[200px] bg-cover bg-center bg-gray-200' style={{backgroundImage: `url(${backgroundImage})`}}>
         { name ? (
          <>
          <Link to={`/menu/${id}`} onClick={()=>window.scrollTo({top:"0",behavior : "smooth"})}> 
-        <div className='w-40 min-h-[150px]'>
+        <div className='w-40 min-h-[150px] bg-transparent'>
         <img src={image} className='h-full w-full' alt=''/>
         </div>
-        <h3 className='font-semibold text-slate-600 text-center capitalize text-lg'>{name}</h3>
-        <p className='text-center text-slate-500 font-medium'>{category}</p>
-        <p className='text-center font-bold'><span className='text-red-500'>RS.</span><span>{price}</span></p>
+        <h3 className='font-semibold text-white text-center capitalize text-lg'>{name}</h3>
+        <p className='text-center text-white font-medium'>{category}</p>
+        <p className='text-center font-bold text-white'><span className='text-red-500'>RS.</span><span>{price}</span></p>
         </Link>
          </>
             )
