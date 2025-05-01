@@ -11,11 +11,16 @@ export const productSlice = createSlice({
   name: "product",
   initialState,
   reducers: {
+
     setDataProduct: (state, action) => {
+      console.log(action)
       state.productList = [...action.payload];
     },
+
+
     addCartItem: (state, action) => {
       const check = state.cartItem.some((el) => el._id === action.payload._id);
+      console.log(action)
       if (check) {
         toast("Already Item in Cart");
       } else {
@@ -27,6 +32,9 @@ export const productSlice = createSlice({
         ];
       }
     },
+
+    
+
     deleteCartItem: (state, action) => {
       toast("one Item Delete");
       const index = state.cartItem.findIndex((el) => el._id === action.payload);

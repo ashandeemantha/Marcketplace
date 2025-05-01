@@ -1,6 +1,7 @@
+
 import React from 'react'
 import { Link } from 'react-router-dom';
-import backgroundImage from '../assest/Vegetarian Green Fruits And Vegetables Seamless Pattern Background Wallpaper Image For Free Download - Pngtree.jpeg';
+import backgroundImage from '../assest/vegetable-background.jpeg';
 
 const Homecard = ({name,image,category,price, loading,id}) => {
   return (

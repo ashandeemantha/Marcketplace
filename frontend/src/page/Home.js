@@ -56,7 +56,7 @@ const Home = () => {
           </button>
         </div>
 
-        {/* Product Cards 
+        {/* Product Cards */}
         <div className="md:w-1/2 flex flex-wrap gap-5 p-4 justify-center">
           {homeProductCartList[0]
             ? homeProductCartList.map((el) => (
@@ -70,9 +70,9 @@ const Home = () => {
                 />
               ))
             : loadingArray.map((_, index) => (
-                <HomeCard key={index} loading={"Loading..."} />
+                <HomeCard key={index + "loading"} loading={"Loading..."} />
               ))}
-        </div>*/}
+        </div>
       </div>
 
       {/* Scrollable Feature Section */}
@@ -93,7 +93,7 @@ const Home = () => {
           {homeProductCartListVegetables[0]
             ? homeProductCartListVegetables.map(el => (
                 <CardFeature
-                  key={el._id}
+                  key={el._id +"vegetable"}
                   id={el._id}
                   name={el.name}
                   category={el.category}
@@ -102,7 +102,7 @@ const Home = () => {
                 />
               ))
             : loadingArrayFeature.map((_, index) => (
-                <CardFeature key={index} loading="Loading..." />
+                <CardFeature key={index+ "cartLoading"} loading="Loading..." />
               ))}
         </div>
       </div>
@@ -110,21 +110,21 @@ const Home = () => {
       <AllProduct heading={"Your Product"}/>
       
       {/* GreenCart Footer */}
-      <footer className="bg-green-100 mt-10 p-6 border-t border-gray-200">
+<footer className="bg-green-100 mt-10 p-0 border-t border-gray-200 ">
         <div className="max-w-6xl mx-auto">
           <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
             <div className="md:col-span-2">
-              <h2 className="text-2xl font-bold text-green-600 mb-4">Filed Crops Marcket Place</h2>
-              <p className="text-gray-600">
+<h2 className="text-2xl font-bold text-green-600 mb-1">Filed Crops Marcket Place</h2>
+              <p className="text-gray-600 ">
                 We deliver fresh vegetables and snacks straight to your door. Trusted by thousands, 
                 we aim to make your shopping experience simple and affordable.
               </p>
             </div>
             
             <div className="flex justify-between gap-8">
-              <div>
-                <h3 className="font-semibold text-lg mb-3">Quick Links</h3>
-                <ul className="space-y-2">
+<div>
+                <h3 className="font-semibold text-lg mb-0">Quick Links</h3>
+                <ul className="space-y-0">
                   <li><a href="#" className="text-gray-600 hover:text-green-600">Home</a></li>
                   <li><a href="#" className="text-gray-600 hover:text-green-600">Menu</a></li>
                   <li><a href="#" className="text-gray-600 hover:text-green-600">About</a></li>
@@ -133,30 +133,30 @@ const Home = () => {
                 </ul>
               </div>
               
-              <div>
-                <h3 className="font-semibold text-lg mb-3">Need help?</h3>
-                <ul className="space-y-2">
-                  <li><a href="#" className="text-gray-600 hover:text-green-600">Delivery Information</a></li>
-                  <li><a href="#" className="text-gray-600 hover:text-green-600">Return & Refund Policy</a></li>
-                  <li><a href="#" className="text-gray-600 hover:text-green-600">Payment Methods</a></li>
-                  <li><a href="#" className="text-gray-600 hover:text-green-600">Track your Order</a></li>
-                  <li><a href="#" className="text-gray-600 hover:text-green-600">Contact Us</a></li>
-                </ul>
-              </div>
+<div>
+<h3 className="font-semibold text-lg mb-0">Need help?</h3>
+<ul className="space-y-0">
+  <li><a href="#" className="text-gray-600 hover:text-green-600">Delivery Information</a></li>
+  <li><a href="#" className="text-gray-600 hover:text-green-600">Return & Refund Policy</a></li>
+  <li><a href="#" className="text-gray-600 hover:text-green-600">Payment Methods</a></li>
+  <li><a href="#" className="text-gray-600 hover:text-green-600">Track your Order</a></li>
+  <li><a href="#" className="text-gray-600 hover:text-green-600">Contact Us</a></li>
+</ul>
+</div>
               
-              <div>
-                <h3 className="font-semibold text-lg mb-3">Follow Us</h3>
-                <ul className="space-y-2">
-                  <li><a href="#" className="text-gray-600 hover:text-green-600">Instagram</a></li>
-                  <li><a href="#" className="text-gray-600 hover:text-green-600">Twitter</a></li>
-                  <li><a href="#" className="text-gray-600 hover:text-green-600">Facebook</a></li>
-                  <li><a href="#" className="text-gray-600 hover:text-green-600">YouTube</a></li>
-                </ul>
-              </div>
+<div>
+<h3 className="font-semibold text-lg mb-0">Follow Us</h3>
+<ul className="space-y-0">
+  <li><a href="#" className="text-gray-600 hover:text-green-600">Instagram</a></li>
+  <li><a href="#" className="text-gray-600 hover:text-green-600">Twitter</a></li>
+  <li><a href="#" className="text-gray-600 hover:text-green-600">Facebook</a></li>
+  <li><a href="#" className="text-gray-600 hover:text-green-600">YouTube</a></li>
+</ul>
+</div>
             </div>
           </div>
           
-          <div className="border-t border-gray-200 mt-8 pt-6 text-center text-sm text-gray-500">
+<div className="border-t border-gray-200 mt-8 pt-2 text-center text-sm text-gray-500">
             <p>1.17 / 10.87.15</p>
             <p>Copyright 2025 © dissanayakam.dev All Right Reserved.</p>
           </div>

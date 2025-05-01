@@ -12,7 +12,7 @@ import {toast} from 'react-hot-toast';
 const Header = () => {
     const [showMenu, setShowMenu] = useState(false);
     const userData = useSelector((state) => state.user);
-    console.log(userData.email);
+    const cartItem = useSelector((state) => state.product.cartItem);
     const dispatch = useDispatch();
 
     const handleShowMenu = () => {
@@ -23,8 +23,6 @@ const Header = () => {
       dispatch(LogoutRedux())
       toast("Logout Successfully");
     }
-
-    console.log(process.env.REACT_APP_ADMIN_EMAIL)
 
     return (
         <header className='fixed shadow-md w-full h-16 px-2 md:px-1 z-50 bg-white'>
@@ -44,7 +42,7 @@ const Header = () => {
                     </nav>
                     <div className="text-2xl text-slate-600 relative">
                         <Link to="cart"><BsCartFill />
-                        <div className="absolute -top-1 -right-1 text-white bg-red-500 h-4 w-4 rounded-full m-0 p-0 text-sm text-center">0</div>
+                        <div className="absolute -top-1 -right-1 text-white bg-red-500 h-4 w-4 rounded-full m-0 p-0 text-sm text-center">{cartItem.length}</div>
                         </Link>
                     </div>
                     <div className="text-xl text-slate-600 cursor-pointer" onClick={handleShowMenu}>

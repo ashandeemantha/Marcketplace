@@ -1,10 +1,21 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import {useDispatch} from 'react-redux';
+import {addCartItem} from "../redux/productslide";
 
 const CardFeature = ({ image, name, price, category, loading, id }) => {
+   const dispatch = useDispatch();
+
   const handleAddCartProduct = (e)=>{
-    e.stopPropagation()
-  }
+    e.stopPropagation();
+    dispatch(addCartItem({
+      _id : id,
+      name : name,
+      price : price,
+      category : category,
+      image : image 
+    }));
+  };
   return (
     <div className='w-full min-w-[200px] max-w-[200px] bg-white hover:shadow-lg drop-shadow-lg py-5 px-4 cursor-pointer flex flex-col'>
       {
@@ -18,8 +29,7 @@ const CardFeature = ({ image, name, price, category, loading, id }) => {
               <p className='text-slate-500 font-medium'>{category}</p>
               <p className='font-bold'><span className='text-red-500'>RS.</span><span>{price}</span></p>
               </Link>
-              <button className='bg-green-400 py-1 my-2 rounded hover:bg-yellow-400 w-full' onClick={()=>handleAddCartProduct}>Add Cart</button>
-            
+              <button className='bg-green-400 py-1 my-2 rounded hover:bg-yellow-400 w-full' onClick={handleAddCartProduct}>Add Cart</button>
           </>
         ) : (
           <div className='min-h-[1500px] flex justify-center items-center'> {/* Fixed typo: 'item-center' → 'items-center' */}

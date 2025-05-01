@@ -1,15 +1,30 @@
 /* eslint-disable jsx-a11y/alt-text */
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useDispatch } from 'react-redux'
 import { useParams } from 'react-router-dom'
 import AllProduct from '../component/AllProduct'
+import { addCartItem } from '../redux/productslide'
 
 const Menu = () => {
   const { filterby } = useParams()
   const productData = useSelector(state => state.product.productList)
+  const dispatch = useDispatch()
 
- const productDisplay =productData.filter(el => el._id === filterby)[0]
- console.log(productDisplay)
+  const productDisplay = productData.filter(el => el._id === filterby)[0]
+
+  const handleAddCartProduct = () => {
+    dispatch(addCartItem({
+      _id: productDisplay._id,
+      name: productDisplay.name,
+      price: productDisplay.price,
+      category: productDisplay.category,
+      image: productDisplay.image
+    }))
+  }
+
+  if (!productDisplay) {
+    return <div className="p-4 text-center text-red-500 font-semibold">Product not found</div>
+  }
 
   return (
     <div className='p-2 md:p-4'>
@@ -26,8 +41,8 @@ const Menu = () => {
         </p>
 
         <div className='flex gap-3'>
-        <button className='bg-yellow-500 py-1 my-2 rounded hover:bg-yellow-600 min-w-[100px]'>Buy</button>
-        <button className='bg-yellow-500 py-1 my-2 rounded hover:bg-yellow-600 min-w-[100px]'>Add Cart</button>
+        <button className='bg-green-400 py-1 my-2 rounded hover:bg-yellow-400 min-w-[100px]'>Buy</button>
+        <button className='bg-green-400 py-1 my-2 rounded hover:bg-yellow-400 min-w-[100px]' onClick={handleAddCartProduct}>Add Cart</button>
         </div>
         <div>
           <p className='text-slate-600 font-medium'>Description :</p>
