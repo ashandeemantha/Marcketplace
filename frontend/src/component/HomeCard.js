@@ -3,9 +3,9 @@ import React from 'react'
 import { Link } from 'react-router-dom';
 import backgroundImage from '../assest/vegetable-background.jpeg';
 
-const Homecard = ({name,image,category,price, loading,id}) => {
+const HomeCard = ({name,image,category,price, loading,id}) => {
   return (
-<div className='shadow-md p-2 rounded min-w-[150px] min-h-[200px] bg-cover bg-center bg-gray-200' style={{backgroundImage: `url(${backgroundImage})`}}>
+<div className='shadow-md p-2 rounded min-w-[150px] min-h-[200px] bg-cover bg-center bg-gray-200 hover:scale-110 transition-transform duration-300 ease-in-out' style={{backgroundImage: `url(${backgroundImage})`}}>
         { name ? (
          <>
          <Link to={`/menu/${id}`} onClick={()=>window.scrollTo({top:"0",behavior : "smooth"})}> 
@@ -27,4 +27,4 @@ const Homecard = ({name,image,category,price, loading,id}) => {
   )
 }
 
-export default Homecard
+export default HomeCard
