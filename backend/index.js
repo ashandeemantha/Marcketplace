@@ -9,9 +9,6 @@ app.use(express.json({ limit: "10mb" }));
 
 const PORT = process.env.PORT || 8080;
 
-// Log the MongoDB URL for debugging
-//console.log("MongoDB URL:", process.env.MONGODB_URL);
-
 // MongoDB Connection
 mongoose.set("strictQuery", false);
 mongoose
@@ -19,18 +16,46 @@ mongoose
   .then(() => console.log("Connected to Database"))
   .catch((err) => console.error("Database Connection Error:", err));
 
-// User Schema
+// Enhanced User Schema with Role
 const userSchema = new mongoose.Schema({
-  firstName: String,
+  firstName: {
+    type: String,
+    required: [true, "First name is required"]
+  },
   lastName: String,
   email: {
     type: String,
     unique: true,
+    required: [true, "Email is required"],
+    trim: true,
+    lowercase: true
   },
-  password: String,
-  confirmPassword: String,
-  image: String,
-});
+  password: {
+    type: String,
+    required: [true, "Password is required"],
+    minlength: [6, "Password must be at least 6 characters"]
+  },
+  confirmPassword: {
+    type: String,
+    required: [true, "Confirm password is required"],
+    validate: {
+      validator: function(el) {
+        return el === this.password;
+      },
+      message: "Passwords do not match"
+    }
+  },
+  image: {
+    type: String,
+    default: "default_profile_image_url" // Set your default image URL here
+  },
+  role: {
+    type: String,
+    enum: ["admin", "buyer", "farmer"],
+    default: "buyer",
+    required: [true, "Role is required"]
+  }
+}, { timestamps: true });
 
 // User Model
 const userModel = mongoose.model("user", userSchema);
@@ -40,41 +65,72 @@ app.get("/", (req, res) => {
   res.send("Server is running");
 });
 
-// Signup API
+// Signup API with Role
 app.post("/signup", async (req, res) => {
   try {
     console.log("Received Signup Data:", req.body);
-    const { email } = req.body;
+    const { email, role } = req.body;
+
+    // Validate role
+    if (!["admin", "buyer", "farmer"].includes(role)) {
+      return res.status(400).json({ 
+        message: "Invalid role. Must be admin, buyer, or farmer", 
+        alert: false 
+      });
+    }
 
     // Check if email already exists
     const existingUser = await userModel.findOne({ email });
 
     if (existingUser) {
-      return res.status(400).json({ message: "Email ID is already registered", alert: false });
+      return res.status(400).json({ 
+        message: "Email ID is already registered", 
+        alert: false 
+      });
     }
 
-    // Save new user
+    // Create new user with role
     const newUser = new userModel(req.body);
     await newUser.save();
 
-    res.status(201).json({ message: "Successfully signed up", alert: true });
+    res.status(201).json({ 
+      message: "Successfully signed up", 
+      alert: true,
+      user: {
+        _id: newUser._id,
+        firstName: newUser.firstName,
+        lastName: newUser.lastName,
+        email: newUser.email,
+        image: newUser.image,
+        role: newUser.role
+      }
+    });
   } catch (error) {
     console.error("Signup Error:", error);
-    res.status(500).json({ message: "Internal Server Error", alert: false });
+    if (error.name === 'ValidationError') {
+      return res.status(400).json({ 
+        message: error.message, 
+        alert: false 
+      });
+    }
+    res.status(500).json({ 
+      message: "Internal Server Error", 
+      alert: false 
+    });
   }
 });
 
-// Login API
-app.post("/Login", async (req, res) => {
+// Login API with Role
+app.post("/login", async (req, res) => {
   try {
     console.log("Received Login Data:", req.body);
     const { email, password } = req.body;
 
-    const user = await userModel.findOne({ email: email });
+    const user = await userModel.findOne({ email });
 
     if (!user) {
       return res.status(400).json({
-        message: "Email is not available, please signup first",
+        message: "Email is not registered, please sign up first",
         alert: false,
       });
     }
@@ -86,16 +142,16 @@ app.post("/Login", async (req, res) => {
       });
     }
 
-    // Successful login response
+    // Successful login response with role
     const dataToSend = {
       _id: user._id,
       firstName: user.firstName,
       lastName: user.lastName,
       email: user.email,
       image: user.image,
+      role: user.role
     };
 
-    // Log user data in the terminal
     console.log("User Data:", dataToSend);
 
     return res.status(200).json({
@@ -113,32 +169,38 @@ app.post("/Login", async (req, res) => {
   }
 });
 
-//product section
+// Product Section
 const schemaProduct = mongoose.Schema({
   name: String,
-  category:String,
+  category: String,
   image: String,
   price: String,
   description: String,
 });
-const productModel = mongoose.model("product",schemaProduct)
+const productModel = mongoose.model("product", schemaProduct);
 
-//save product in data 
-//api
-app.post("/uploadProduct",async(req,res)=>{
-  console.log(req.body)
-  const data = await productModel(req.body)
-  const datasave = await data.save()
-  res.send({message : "Upload successfully"})
-})
+// Save product in database
+app.post("/uploadProduct", async (req, res) => {
+  try {
+    const data = await productModel(req.body);
+    const datasave = await data.save();
+    res.status(201).json({ message: "Upload successfully" });
+  } catch (error) {
+    console.error("Product Upload Error:", error);
+    res.status(500).json({ message: "Error uploading product" });
+  }
+});
 
-
-//
-app.get("/product",async(req,res)=>{
-  const data = await productModel.find({})
-  res.send(JSON.stringify(data))
-})
-
+// Get all products
+app.get("/product", async (req, res) => {
+  try {
+    const data = await productModel.find({});
+    res.status(200).json(data);
+  } catch (error) {
+    console.error("Product Fetch Error:", error);
+    res.status(500).json({ message: "Error fetching products" });
+  }
+});
 
 // Start Server
 app.listen(PORT, () => console.log(`Server is running at port: ${PORT}`));
