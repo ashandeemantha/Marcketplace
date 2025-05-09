@@ -433,10 +433,28 @@ const Home = () => {
             <p className="text-gray-400 text-sm mb-4 md:mb-0">
               © 2025 Field Crops. All rights reserved.
             </p>
-            <div className="flex space-x-6">
-              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/visa/visa-original.svg" className="h-8" alt="Visa" />
-              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/mastercard/mastercard-original.svg" className="h-8" alt="Mastercard" />
-              <img src="https://cdn.jsdelivr.net/gh/devicons/devicon/icons/paypal/paypal-original.svg" className="h-8" alt="PayPal" />
+            <div className="flex space-x-10 items-center">
+              {/* Visa */}
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/commons/5/5e/Visa_Inc._logo.svg" 
+                className="h-6 w-auto object-contain" 
+                alt="Visa" 
+                loading="lazy"
+              />
+              {/* Mastercard */}
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/commons/2/2a/Mastercard-logo.svg" 
+                className="h-6 w-auto object-contain" 
+                alt="Mastercard" 
+                loading="lazy"
+              />
+              {/* PayPal */}
+              <img 
+                src="https://upload.wikimedia.org/wikipedia/commons/b/b5/PayPal.svg" 
+                className="h-6 w-auto object-contain" 
+                alt="PayPal" 
+                loading="lazy"
+              />
             </div>
           </div>
         </div>

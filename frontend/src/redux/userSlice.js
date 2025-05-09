@@ -17,7 +17,7 @@ export const userSlice = createSlice({
             state._id = action.payload.data._id;
             state.firstName = action.payload.data.firstName;
             state.lastName = action.payload.data.lastName;
-            state.email = action.payload.data.email; // ✅ fixed
+            state.email = action.payload.data.email;
             state.image = action.payload.data.image;
         },
         LogoutRedux: (state) => {
