@@ -22,7 +22,7 @@ const Header = () => {
         dispatch(LogoutRedux());
         toast.success("Logout Successfully");
         setShowMenu(false);
-    }
+    };
 
     return (
         <header className='fixed w-full h-16 bg-white shadow-sm z-50 border-b border-gray-100'>
@@ -34,30 +34,28 @@ const Header = () => {
 
                 {/* Desktop Navigation */}
                 <nav className="hidden md:flex items-center space-x-8">
-                    <Link 
-                        to="/" 
-                        className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600"
-                    >
+                    <Link to="/" className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600">
                         Home
                     </Link>
-                    <Link 
-                        to="/menu/6801d8972fc7874395521c39" 
-                        className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600"
-                    >
+                    <Link to="/menu/6801d8972fc7874395521c39" className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600">
                         Products
                     </Link>
-                    <Link 
-                        to="/about" 
-                        className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600"
-                    >
+                    <Link to="/about" className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600">
                         About
                     </Link>
-                    <Link 
-                        to="/contact" 
-                        className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600"
-                    >
+                    <Link to="/contact" className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600">
                         Contact
                     </Link>
+                    <Link to="/stripe-payment" className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600">
+                        Stripe Payment
+                    </Link>
+
+                    {/* Add Product (admin or farmer only) */}
+                    {(userData?.role === 'admin' || userData?.role === 'farmer') && (
+                        <Link to="/newproduct" className="text-green-600 font-medium py-1 border-b-2 border-transparent hover:border-green-600">
+                            Add Product
+                        </Link>
+                    )}
                 </nav>
 
                 {/* Icons Group */}
@@ -99,16 +97,17 @@ const Header = () => {
                                     className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-100"
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    {userData.email === process.env.REACT_APP_ADMIN_EMAIL && (
+                                    {/* Dropdown link to New Product for authorized users */}
+                                    {(userData?.role === 'admin' || userData?.role === 'farmer') && (
                                         <Link 
                                             to="/newproduct" 
                                             className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
                                             onClick={() => setShowMenu(false)}
                                         >
-                                            New Product
+                                            Add Product
                                         </Link>
                                     )}
-                                    
+
                                     {userData.image ? (
                                         <button
                                             onClick={handleLogout}
@@ -126,34 +125,18 @@ const Header = () => {
                                         </Link>
                                     )}
 
-                                    {/* Mobile Navigation - Only shows in dropdown on mobile */}
+                                    {/* Mobile Navigation - Shown only in dropdown on mobile */}
                                     <div className="md:hidden border-t border-gray-100 mt-1 pt-1">
-                                        <Link 
-                                            to="/" 
-                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                                            onClick={() => setShowMenu(false)}
-                                        >
+                                        <Link to="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setShowMenu(false)}>
                                             Home
                                         </Link>
-                                        <Link 
-                                            to="/menu/6801d8972fc7874395521c39" 
-                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                                            onClick={() => setShowMenu(false)}
-                                        >
+                                        <Link to="/menu/6801d8972fc7874395521c39" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setShowMenu(false)}>
                                             Products
                                         </Link>
-                                        <Link 
-                                            to="/about" 
-                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                                            onClick={() => setShowMenu(false)}
-                                        >
+                                        <Link to="/about" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setShowMenu(false)}>
                                             About
                                         </Link>
-                                        <Link 
-                                            to="/contact" 
-                                            className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors"
-                                            onClick={() => setShowMenu(false)}
-                                        >
+                                        <Link to="/contact" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setShowMenu(false)}>
                                             Contact
                                         </Link>
                                     </div>

@@ -1,7 +1,9 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { toast } from 'react-hot-toast';
 import { BsCloudUpload } from "react-icons/bs";
 import { ImagetoBase64 } from '../utility/ImagetoBase64';
+import { useSelector } from 'react-redux';
+import { useNavigate } from 'react-router-dom';
 
 const Newproduct = () => {
   const [data, setData] = useState({
@@ -13,6 +15,15 @@ const Newproduct = () => {
   });
 
   const [isLoading, setIsLoading] = useState(false);
+  const userData = useSelector((state) => state.user);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!(userData.role === 'admin' || userData.role === 'farmer')) {
+      toast.error("You are not authorized to upload products");
+      navigate("/");
+    }
+  }, [userData, navigate]);
 
   const handleOnChange = (e) => {
     const { name, value } = e.target;
@@ -54,7 +65,7 @@ const Newproduct = () => {
         headers: {
           "content-type": "application/json"
         },
-        body: JSON.stringify(data)
+        body: JSON.stringify({ ...data, role: userData.role }) // include role in request body
       });
 
       const fetchRes = await fetchData.json();

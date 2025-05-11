@@ -1,17 +1,29 @@
-import React from "react";
+import React, { useState } from "react";
 import { useSelector } from "react-redux";
 import CartProduct from "../component/CartProduct";
 import emptyCartImage from "../assest/empty.gif";
 import { toast } from "react-hot-toast";
-import { loadStripe } from '@stripe/stripe-js';
 import { useNavigate } from "react-router-dom";
-import { FaShoppingCart, FaArrowRight, FaLock, FaShieldAlt, FaTruck } from "react-icons/fa";
+import { 
+  FaShoppingCart, 
+  FaArrowRight, 
+  FaLock, 
+  FaShieldAlt, 
+  FaTruck,
+  FaCreditCard,
+  FaMoneyBillWave
+} from "react-icons/fa";
+import { SiStripe } from "react-icons/si";
 
 const Cart = () => {
   const productCartItem = useSelector((state) => state.product.cartItem);
   const user = useSelector(state => state.user);
   const navigate = useNavigate();
 
+  // Simplified payment methods
+  const [paymentMethod, setPaymentMethod] = useState("online");
+
+  // Calculate totals
   const totalPrice = productCartItem.reduce(
     (acc, curr) => acc + parseInt(curr.total),
     0
@@ -21,36 +33,55 @@ const Cart = () => {
     0
   );
 
-  const deliveryFee = totalPrice > 5000 ? 0 : 500; // Free delivery for orders over Rs. 5000
+  const deliveryFee = totalPrice > 5000 ? 0 : 500;
   const grandTotal = totalPrice + deliveryFee;
 
   const handlePayment = async () => {
-    if (user.email) {
-      const stripePromise = await loadStripe(process.env.REACT_APP_STRIPE_PUBLIC_KEY);
-      const res = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/create-checkout-session`, {
-        method: "POST",
-        headers: {
-          "content-type": "application/json"
-        },
-        body: JSON.stringify({
-          items: productCartItem,
-          userId: user._id,
-          deliveryFee
-        })
-      });
-      
-      if (res.statusCode === 500) return;
-
-      const data = await res.json();
-      console.log(data);
-
-      toast("Redirecting to payment gateway...!");
-      stripePromise.redirectToCheckout({ sessionId: data });
-    } else {
+    if (!user.email) {
       toast("Please login to proceed with payment!");
       setTimeout(() => {
         navigate("/login");
       }, 1000);
+      return;
+    }
+
+    if (paymentMethod === "online") {
+      // Navigate to payment gateway
+      navigate("/stripe-payment", { 
+        state: { 
+          items: productCartItem,
+          userId: user._id,
+          deliveryFee,
+          totalAmount: grandTotal
+        } 
+      });
+    } else if (paymentMethod === "cod") {
+      // Handle Cash on Delivery
+      try {
+        const response = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/create-order`, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            items: productCartItem,
+            userId: user._id,
+            paymentMethod: "cod",
+            totalAmount: grandTotal,
+            deliveryFee
+          })
+        });
+        
+        const data = await response.json();
+        if (response.ok) {
+          toast.success("Order placed successfully!");
+          navigate("/order-success", { state: { orderId: data.orderId } });
+        } else {
+          throw new Error(data.message || "Failed to place order");
+        }
+      } catch (error) {
+        toast.error(error.message);
+      }
     }
   };
 
@@ -131,18 +162,50 @@ const Cart = () => {
                       )}
                     </span>
                   </div>
-                  {totalPrice > 3000 && (
-                    <div className="flex justify-between text-green-600">
-                      <span>Delivery Discount</span>
-                      <span>- Rs. 500</span>
-                    </div>
-                  )}
                 </div>
 
                 {/* Total */}
                 <div className="flex justify-between text-lg font-bold py-4 border-t border-b mb-6">
                   <span>Total</span>
                   <span>Rs. {grandTotal.toLocaleString()}</span>
+                </div>
+
+                {/* Simplified Payment Method Selection */}
+                <div className="mb-6">
+                  <h3 className="text-md font-semibold mb-2">Select Payment Method</h3>
+                  <div className="flex flex-col space-y-2">
+                    {/* Online Payment Option */}
+                    <label className="inline-flex items-center p-2 rounded hover:bg-gray-50">
+                      <input
+                        type="radio"
+                        className="form-radio h-4 w-4 text-green-600"
+                        name="paymentMethod"
+                        value="online"
+                        checked={paymentMethod === "online"}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                      />
+                      <div className="ml-3 flex items-center">
+                        <SiStripe className="text-blue-500 text-xl mr-2" />
+                        <span>Online Payment</span>
+                      </div>
+                    </label>
+
+                    {/* Cash on Delivery Option */}
+                    <label className="inline-flex items-center p-2 rounded hover:bg-gray-50">
+                      <input
+                        type="radio"
+                        className="form-radio h-4 w-4 text-green-600"
+                        name="paymentMethod"
+                        value="cod"
+                        checked={paymentMethod === "cod"}
+                        onChange={(e) => setPaymentMethod(e.target.value)}
+                      />
+                      <div className="ml-3 flex items-center">
+                        <FaMoneyBillWave className="text-green-500 text-xl mr-2" />
+                        <span>Cash on Delivery</span>
+                      </div>
+                    </label>
+                  </div>
                 </div>
 
                 {/* Security Info */}
@@ -156,7 +219,14 @@ const Cart = () => {
                   onClick={handlePayment}
                   className="w-full bg-green-600 hover:bg-green-700 text-white py-3 px-4 rounded-lg font-medium transition-colors flex items-center justify-center"
                 >
-                  Proceed to Checkout
+                  {paymentMethod === "online" ? (
+                    <>
+                      <FaCreditCard className="mr-2" />
+                      Proceed to Payment
+                    </>
+                  ) : (
+                    "Place Order (COD)"
+                  )}
                 </button>
 
                 {/* Trust Badges */}

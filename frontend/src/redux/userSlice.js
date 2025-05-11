@@ -6,6 +6,7 @@ const initialState = {
     image: "",
     lastName: "",
     _id: "",
+    role: "", // added role to state
 };
 
 export const userSlice = createSlice({
@@ -19,6 +20,7 @@ export const userSlice = createSlice({
             state.lastName = action.payload.data.lastName;
             state.email = action.payload.data.email;
             state.image = action.payload.data.image;
+            state.role = action.payload.data.role; // added role to login action
         },
         LogoutRedux: (state) => {
             state._id = "";

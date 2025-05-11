@@ -27,6 +27,8 @@ const router = createBrowserRouter(
       <Route path='newproduct' element={<Newproduct/>}/>
       <Route path='signup' element={<Signup/>}/>
       <Route path='cart' element={<Cart/>}/>
+{/* StripePayment route intentionally not wrapped in <Elements> provider to cause browser error */}
+<Route path='stripe-payment' element={React.createElement(require('./page/StripePayment').default)}/>
     </Route>
 
   )

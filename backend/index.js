@@ -182,6 +182,10 @@ const productModel = mongoose.model("product", schemaProduct);
 // Save product in database
 app.post("/uploadProduct", async (req, res) => {
   try {
+    const { role } = req.body;
+    if (!(role === 'admin' || role === 'farmer')) {
+      return res.status(403).json({ message: "You are not authorized to upload products" });
+    }
     const data = await productModel(req.body);
     const datasave = await data.save();
     res.status(201).json({ message: "Upload successfully" });
