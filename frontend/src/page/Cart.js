@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import CartProduct from "../component/CartProduct";
 import emptyCartImage from "../assest/empty.gif";
@@ -11,7 +11,12 @@ import {
   FaShieldAlt, 
   FaTruck,
   FaCreditCard,
-  FaMoneyBillWave
+  FaMoneyBillWave,
+  FaMapMarkerAlt,
+  FaPhone,
+  FaSpinner,
+  FaUser,
+  FaEnvelope
 } from "react-icons/fa";
 import { SiStripe } from "react-icons/si";
 
@@ -20,8 +25,19 @@ const Cart = () => {
   const user = useSelector(state => state.user);
   const navigate = useNavigate();
 
-  // Simplified payment methods
+  // Payment and buyer details state
   const [paymentMethod, setPaymentMethod] = useState("online");
+  const [buyerDetails, setBuyerDetails] = useState({
+    name: user?.name || "",
+    email: user?.email || "",
+    phone: user?.phone || "",
+    address: user?.address || ""
+  });
+  const [mapStatus, setMapStatus] = useState({
+    loaded: false,
+    loading: false,
+    error: null
+  });
 
   // Calculate totals
   const totalPrice = productCartItem.reduce(
@@ -36,6 +52,70 @@ const Cart = () => {
   const deliveryFee = totalPrice > 5000 ? 0 : 500;
   const grandTotal = totalPrice + deliveryFee;
 
+  // Handle input changes
+  const handleInputChange = (e) => {
+    const { name, value } = e.target;
+    setBuyerDetails(prev => ({
+      ...prev,
+      [name]: value
+    }));
+  };
+
+  // Load Google Maps script when needed
+  useEffect(() => {
+    if (buyerDetails.address && !window.google) {
+      setMapStatus({ loaded: false, loading: true, error: null });
+      
+      const script = document.createElement('script');
+      script.src = `https://maps.googleapis.com/maps/api/js?key=YOUR_API_KEY&libraries=places`;
+      script.async = true;
+      script.onload = () => {
+        setMapStatus({ loaded: true, loading: false, error: null });
+      };
+      script.onerror = () => {
+        setMapStatus({ loaded: false, loading: false, error: "Failed to load Google Maps" });
+      };
+      document.head.appendChild(script);
+
+      return () => {
+        document.head.removeChild(script);
+      };
+    } else if (window.google) {
+      setMapStatus({ loaded: true, loading: false, error: null });
+    }
+  }, [buyerDetails.address]);
+
+  // Initialize map when conditions are met
+  useEffect(() => {
+    if (mapStatus.loaded && buyerDetails.address) {
+      initMap();
+    }
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [mapStatus.loaded, buyerDetails.address]);
+
+  const initMap = () => {
+    const mapElement = document.getElementById("delivery-map");
+    if (!mapElement || !window.google) return;
+
+    const geocoder = new window.google.maps.Geocoder();
+    
+    geocoder.geocode({ address: buyerDetails.address }, (results, status) => {
+      if (status === "OK" && results[0]) {
+        new window.google.maps.Map(mapElement, {
+          center: results[0].geometry.location,
+          zoom: 15,
+          disableDefaultUI: true,
+          zoomControl: true
+        });
+      } else {
+        setMapStatus(prev => ({
+          ...prev,
+          error: "Could not locate this address. Please check the details."
+        }));
+      }
+    });
+  };
+
   const handlePayment = async () => {
     if (!user.email) {
       toast("Please login to proceed with payment!");
@@ -45,18 +125,23 @@ const Cart = () => {
       return;
     }
 
+    // Validate buyer details
+    if (!buyerDetails.phone || !buyerDetails.address) {
+      toast.error("Please provide phone number and delivery address");
+      return;
+    }
+
     if (paymentMethod === "online") {
-      // Navigate to payment gateway
       navigate("/stripe-payment", { 
         state: { 
           items: productCartItem,
           userId: user._id,
           deliveryFee,
-          totalAmount: grandTotal
+          totalAmount: grandTotal,
+          buyerDetails
         } 
       });
     } else if (paymentMethod === "cod") {
-      // Handle Cash on Delivery
       try {
         const response = await fetch(`${process.env.REACT_APP_SERVER_DOMIN}/create-order`, {
           method: "POST",
@@ -68,7 +153,8 @@ const Cart = () => {
             userId: user._id,
             paymentMethod: "cod",
             totalAmount: grandTotal,
-            deliveryFee
+            deliveryFee,
+            buyerDetails
           })
         });
         
@@ -170,7 +256,112 @@ const Cart = () => {
                   <span>Rs. {grandTotal.toLocaleString()}</span>
                 </div>
 
-                {/* Simplified Payment Method Selection */}
+                {/* Buyer Details Section */}
+                <div className="mb-6">
+                  <h3 className="text-md font-semibold mb-3">Contact & Delivery Information</h3>
+                  
+                  {/* Name */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <FaUser className="inline mr-2" />
+                      Full Name
+                    </label>
+                    <input
+                      type="text"
+                      name="name"
+                      value={buyerDetails.name}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                      placeholder="Your full name"
+                      required
+                    />
+                  </div>
+
+                  {/* Email */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <FaEnvelope className="inline mr-2" />
+                      Email
+                    </label>
+                    <input
+                      type="email"
+                      name="email"
+                      value={buyerDetails.email}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                      placeholder="your@email.com"
+                      required
+                    />
+                  </div>
+                  
+                  {/* Phone Number */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <FaPhone className="inline mr-2" />
+                      Phone Number
+                    </label>
+                    <input
+                      type="tel"
+                      name="phone"
+                      value={buyerDetails.phone}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                      placeholder="Enter your phone number"
+                      required
+                    />
+                  </div>
+                  
+                  {/* Address */}
+                  <div className="mb-4">
+                    <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <FaMapMarkerAlt className="inline mr-2" />
+                      Delivery Address
+                    </label>
+                    <textarea
+                      name="address"
+                      value={buyerDetails.address}
+                      onChange={handleInputChange}
+                      className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-green-500 focus:border-green-500"
+                      rows="3"
+                      placeholder="Enter your full delivery address"
+                      required
+                    />
+                  </div>
+                  
+                  {/* Map Preview */}
+                  {buyerDetails.address && (
+                    <div className="mt-4">
+                      <div 
+                        id="delivery-map" 
+                        style={{ 
+                          height: "200px", 
+                          width: "100%", 
+                          borderRadius: "8px",
+                          backgroundColor: "#f0f0f0",
+                          display: "flex",
+                          alignItems: "center",
+                          justifyContent: "center"
+                        }}
+                      >
+                        {mapStatus.loading ? (
+                          <div className="flex items-center text-gray-500">
+                            <FaSpinner className="animate-spin mr-2" />
+                            Loading map...
+                          </div>
+                        ) : mapStatus.error ? (
+                          <div className="text-red-500 text-sm p-2 text-center">
+                            {mapStatus.error}
+                          </div>
+                        ) : null}
+                      </div>
+                      <p className="text-xs text-gray-500 mt-1">
+                        Map showing approximate delivery location
+                      </p>
+                    </div>
+                  )}
+                </div>
+
+                {/* Payment Method Selection */}
                 <div className="mb-6">
                   <h3 className="text-md font-semibold mb-2">Select Payment Method</h3>
                   <div className="flex flex-col space-y-2">

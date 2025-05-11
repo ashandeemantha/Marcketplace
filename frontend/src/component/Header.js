@@ -46,9 +46,7 @@ const Header = () => {
                     <Link to="/contact" className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600">
                         Contact
                     </Link>
-                    <Link to="/stripe-payment" className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600">
-                        Stripe Payment
-                    </Link>
+                   
 
                     {/* Add Product (admin or farmer only) */}
                     {(userData?.role === 'admin' || userData?.role === 'farmer') && (
