@@ -4,16 +4,16 @@ import { AiFillDelete } from "react-icons/ai";
 import { useDispatch } from "react-redux";
 import { deleteCartItem, increaseQty, decreaseQty } from "../redux/productslide";
 
-const CartProduct = ({ id, name, image, category, qty, total, price }) => {
+const CartProduct = ({ _id, name, image, category, qty, total, price }) => {
   const dispatch = useDispatch();
 
   const handleIncrease = () => {
-    dispatch(increaseQty(id));
+    dispatch(increaseQty(_id));
   };
 
   const handleDecrease = () => {
     if (qty > 1) {
-      dispatch(decreaseQty(id));
+      dispatch(decreaseQty(_id));
     }
   };
 
@@ -39,7 +39,7 @@ const CartProduct = ({ id, name, image, category, qty, total, price }) => {
             <p className="text-gray-500 text-sm">{category}</p>
           </div>
           <button 
-            onClick={() => dispatch(deleteCartItem(id))}
+            onClick={() => dispatch(deleteCartItem(_id))}
             className="text-gray-400 hover:text-red-500 transition-colors p-1"
             aria-label="Remove item"
           >

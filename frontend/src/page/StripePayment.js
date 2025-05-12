@@ -199,7 +199,7 @@ const StripePaymentForm = ({ orderDetails }) => {
             />
             <div className="absolute right-3 top-3 text-gray-400">
               {fieldStatus.cardNumber.complete && (
-                <FaCheck className="text-green-500" />
+                <FaCheck className="text-blue-500" />
               )}
             </div>
           </div>
@@ -221,7 +221,7 @@ const StripePaymentForm = ({ orderDetails }) => {
                 className="w-full"
               />
               {fieldStatus.cardExpiry.complete && (
-                <FaCheck className="text-green-500 float-right" />
+                <FaCheck className="text-blue-500 float-right" />
               )}
             </div>
             {fieldStatus.cardExpiry.error && (
@@ -239,7 +239,7 @@ const StripePaymentForm = ({ orderDetails }) => {
                 className="w-full"
               />
               {fieldStatus.cardCvc.complete && (
-                <FaCheck className="text-green-500 float-right" />
+                <FaCheck className="text-blue-500 float-right" />
               )}
             </div>
             {fieldStatus.cardCvc.error && (
@@ -304,15 +304,15 @@ const StripePaymentForm = ({ orderDetails }) => {
       <div className="bg-gray-50 p-4 rounded-lg border border-gray-200 mb-4">
         <div className="flex justify-between items-center mb-2">
           <span className="text-gray-600">Subtotal</span>
-          <span className="font-medium">${orderDetails.subtotal?.toFixed(2) || '0.00'}</span>
+          <span className="font-medium">RS.{orderDetails.subtotal?.toFixed(2) || '0.00'}</span>
         </div>
         <div className="flex justify-between items-center mb-2">
           <span className="text-gray-600">Shipping</span>
-          <span className="font-medium">${orderDetails.shipping?.toFixed(2) || '0.00'}</span>
+          <span className="font-medium">RS.{orderDetails.shipping?.toFixed(2) || '0.00'}</span>
         </div>
         <div className="flex justify-between items-center pt-3 border-t border-gray-200">
           <span className="text-lg font-bold">Total</span>
-          <span className="text-lg font-bold text-blue-600">${orderDetails.totalAmount.toFixed(2)}</span>
+          <span className="text-lg font-bold text-blue-600">RS.{orderDetails.totalAmount.toFixed(2)}</span>
         </div>
       </div>
         
@@ -333,13 +333,13 @@ const StripePaymentForm = ({ orderDetails }) => {
         ) : (
           <>
             <FaCreditCard className="mr-2" />
-            Pay with Card ${orderDetails.totalAmount.toFixed(2)}
+            Pay with Card RS.{orderDetails.totalAmount.toFixed(2)}
           </>
         )}
       </button>
 
       <div className="flex items-center justify-center text-xs text-gray-500 mt-4">
-        <FaShieldAlt className="mr-2 text-green-500" />
+        <FaShieldAlt className="mr-2 text-blue-500" />
         <span>Your payment is secured with 256-bit SSL encryption</span>
       </div>
     </form>
@@ -482,13 +482,13 @@ const PayPalPaymentForm = ({ orderDetails }) => {
         ) : (
           <>
             <SiPaypal className="mr-2 text-xl" />
-            Pay with PayPal ${orderDetails.totalAmount.toFixed(2)}
+            Pay with PayPal RS.{orderDetails.totalAmount.toFixed(2)}
           </>
         )}
       </button>
 
       <div className="flex items-center justify-center text-xs text-gray-500 mt-4">
-        <FaShieldAlt className="mr-2 text-green-500" />
+        <FaShieldAlt className="mr-2 text-blue-500" />
         <span>Your payment is secured with PayPal's protection</span>
       </div>
     </form>
@@ -509,7 +509,7 @@ const PaymentMethodSelector = ({ selectedMethod, onSelect }) => {
       >
         <FaRegCreditCard className="text-blue-600 text-lg" />
         <span className="font-medium">Credit Card</span>
-        {selectedMethod === 'card' && <FaCheck className="text-green-500 ml-1" />}
+        {selectedMethod === 'card' && <FaCheck className="text-blue-500 ml-1" />}
       </button>
       <button
         type="button"
@@ -522,7 +522,7 @@ const PaymentMethodSelector = ({ selectedMethod, onSelect }) => {
       >
         <SiPaypal className="text-blue-600 text-lg" />
         <span className="font-medium">PayPal</span>
-        {selectedMethod === 'paypal' && <FaCheck className="text-green-500 ml-1" />}
+        {selectedMethod === 'paypal' && <FaCheck className="text-blue-500 ml-1" />}
       </button>
     </div>
   );

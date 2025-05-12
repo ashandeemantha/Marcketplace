@@ -46,9 +46,9 @@ const Header = () => {
                     <Link to="/contact" className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600">
                         Contact
                     </Link>
-                   
-
-                    {/* Add Product (admin or farmer only) */}
+                    <Link to="/orders" className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600">
+                        My Orders
+                    </Link>
                     {(userData?.role === 'admin' || userData?.role === 'farmer') && (
                         <Link to="/newproduct" className="text-green-600 font-medium py-1 border-b-2 border-transparent hover:border-green-600">
                             Add Product
@@ -58,7 +58,7 @@ const Header = () => {
 
                 {/* Icons Group */}
                 <div className="flex items-center space-x-6">
-                    {/* Cart with animated badge */}
+                    {/* Cart */}
                     <Link to="/cart" className="relative text-gray-600 hover:text-green-600 transition-colors">
                         <BsCartFill className="text-xl" />
                         {cartItem.length > 0 && (
@@ -72,7 +72,7 @@ const Header = () => {
                         )}
                     </Link>
 
-                    {/* User Profile with animated dropdown */}
+                    {/* User Profile */}
                     <div className="relative">
                         <button 
                             onClick={handleShowMenu}
@@ -95,7 +95,6 @@ const Header = () => {
                                     className="absolute right-0 mt-2 w-48 bg-white rounded-md shadow-lg py-1 z-50 border border-gray-100"
                                     onClick={(e) => e.stopPropagation()}
                                 >
-                                    {/* Dropdown link to New Product for authorized users */}
                                     {(userData?.role === 'admin' || userData?.role === 'farmer') && (
                                         <Link 
                                             to="/newproduct" 
@@ -105,7 +104,6 @@ const Header = () => {
                                             Add Product
                                         </Link>
                                     )}
-
                                     {userData.image ? (
                                         <button
                                             onClick={handleLogout}
@@ -123,7 +121,7 @@ const Header = () => {
                                         </Link>
                                     )}
 
-                                    {/* Mobile Navigation - Shown only in dropdown on mobile */}
+                                    {/* Mobile nav (inside dropdown) */}
                                     <div className="md:hidden border-t border-gray-100 mt-1 pt-1">
                                         <Link to="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setShowMenu(false)}>
                                             Home
@@ -136,6 +134,9 @@ const Header = () => {
                                         </Link>
                                         <Link to="/contact" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setShowMenu(false)}>
                                             Contact
+                                        </Link>
+                                        <Link to="/orders" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setShowMenu(false)}>
+                                            My Orders
                                         </Link>
                                     </div>
                                 </motion.div>

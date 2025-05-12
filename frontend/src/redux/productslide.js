@@ -43,27 +43,35 @@ export const productSlice = createSlice({
     },
     increaseQty: (state, action) => {
       const index = state.cartItem.findIndex((el) => el._id === action.payload);
-      let qty = state.cartItem[index].qty;
-      const qtyInc = ++qty;
-      state.cartItem[index].qty = qtyInc;
-
-      const price = state.cartItem[index].price;
-      const total = price * qtyInc;
-
-      state.cartItem[index].total = total;
-    },
-    decreaseQty: (state, action) => {
-      const index = state.cartItem.findIndex((el) => el._id === action.payload);
-      let qty = state.cartItem[index].qty;
-      if (qty > 1) {
-        const qtyDec = --qty;
-        state.cartItem[index].qty = qtyDec;
+      if (index !== -1) {
+        let qty = state.cartItem[index].qty;
+        const qtyInc = ++qty;
+        state.cartItem[index].qty = qtyInc;
 
         const price = state.cartItem[index].price;
-        const total = price * qtyDec;
+        const total = price * qtyInc;
 
         state.cartItem[index].total = total;
       }
+    },
+    decreaseQty: (state, action) => {
+      const index = state.cartItem.findIndex((el) => el._id === action.payload);
+      if (index !== -1) {
+        let qty = state.cartItem[index].qty;
+        if (qty > 1) {
+          const qtyDec = --qty;
+          state.cartItem[index].qty = qtyDec;
+
+          const price = state.cartItem[index].price;
+          const total = price * qtyDec;
+
+          state.cartItem[index].total = total;
+        }
+      }
+    },
+
+    clearCart: (state) => {
+      state.cartItem = [];
     },
   },
 });
@@ -74,6 +82,7 @@ export const {
   deleteCartItem,
   increaseQty,
   decreaseQty,
+  clearCart,
 } = productSlice.actions;
 
 export default productSlice.reducer;
