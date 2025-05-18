@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import { Link } from "react-router-dom";
-import logo from "../assest/logo.png";
+import { NavLink, Link } from "react-router-dom"; // Changed from Link to NavLink
+import logo from "../assest/logo2.png";
 import { HiOutlineUserCircle } from "react-icons/hi";
 import { BsCartFill } from "react-icons/bs";
 import { useSelector, useDispatch } from 'react-redux';
@@ -24,48 +24,54 @@ const Header = () => {
         setShowMenu(false);
     };
 
+    // Custom class for active nav links
+    const navLinkClass = ({ isActive }) => 
+        isActive 
+            ? "text-black font-medium py-1 border-b-2 border-black transition-colors" 
+            : "text-white hover:text-black font-medium transition-colors py-1 border-b-2 border-transparent hover:border-black";
+
     return (
-        <header className='fixed w-full h-16 bg-white shadow-sm z-50 border-b border-gray-100'>
+        <header className='fixed w-full h-16 bg-green-500 shadow-sm z-50 border-b border-gray-100'>
             <div className='container mx-auto h-full px-4 flex items-center justify-between'>
                 {/* Logo */}
-                <Link to="/" className='h-12 flex items-center'>
+                <Link to="/" className='h-24 flex items-center'>
                     <img src={logo} className="h-full" alt="Logo" />
                 </Link>
 
                 {/* Desktop Navigation */}
                 <nav className="hidden md:flex items-center space-x-8">
-                    <Link to="/" className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600">
+                    <NavLink to="/" className={navLinkClass}>
                         Home
-                    </Link>
-                    <Link to="/menu/6801d8972fc7874395521c39" className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600">
+                    </NavLink>
+                    <NavLink to="/menu/6801d8972fc7874395521c39" className={navLinkClass}>
                         Products
-                    </Link>
-                    <Link to="/about" className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600">
+                    </NavLink>
+                    <NavLink to="/about" className={navLinkClass}>
                         About
-                    </Link>
-                    <Link to="/contact" className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600">
+                    </NavLink>
+                    <NavLink to="/contact" className={navLinkClass}>
                         Contact
-                    </Link>
-                    <Link to="/orders" className="text-gray-700 hover:text-green-600 font-medium transition-colors py-1 border-b-2 border-transparent hover:border-green-600">
+                    </NavLink>
+                    <NavLink to="/orders" className={navLinkClass}>
                         My Orders
-                    </Link>
+                    </NavLink>
                     {(userData?.role === 'admin' || userData?.role === 'farmer') && (
-                        <Link to="/newproduct" className="text-green-600 font-medium py-1 border-b-2 border-transparent hover:border-green-600">
+                        <NavLink to="/newproduct" className={navLinkClass}>
                             Add Product
-                        </Link>
+                        </NavLink>
                     )}
                 </nav>
 
                 {/* Icons Group */}
                 <div className="flex items-center space-x-6">
                     {/* Cart */}
-                    <Link to="/cart" className="relative text-gray-600 hover:text-green-600 transition-colors">
+                    <Link to="/cart" className="relative text-white hover:text-black transition-colors">
                         <BsCartFill className="text-xl" />
                         {cartItem.length > 0 && (
                             <motion.span 
                                 initial={{ scale: 0 }}
                                 animate={{ scale: 1 }}
-                                className="absolute -top-2 -right-2 bg-green-600 text-white text-xs font-bold h-5 w-5 rounded-full flex items-center justify-center"
+                                className="absolute -top-2 -right-2 bg-red-600 text-white text-xs font-bold h-5 w-5 rounded-full flex items-center justify-center"
                             >
                                 {cartItem.length}
                             </motion.span>
@@ -123,21 +129,21 @@ const Header = () => {
 
                                     {/* Mobile nav (inside dropdown) */}
                                     <div className="md:hidden border-t border-gray-100 mt-1 pt-1">
-                                        <Link to="/" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setShowMenu(false)}>
+                                        <NavLink to="/" className={({ isActive }) => `block px-4 py-2 text-sm ${isActive ? 'text-black font-medium' : 'text-gray-700'} hover:bg-gray-50 transition-colors`} onClick={() => setShowMenu(false)}>
                                             Home
-                                        </Link>
-                                        <Link to="/menu/6801d8972fc7874395521c39" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setShowMenu(false)}>
+                                        </NavLink>
+                                        <NavLink to="/menu/6801d8972fc7874395521c39" className={({ isActive }) => `block px-4 py-2 text-sm ${isActive ? 'text-black font-medium' : 'text-gray-700'} hover:bg-gray-50 transition-colors`} onClick={() => setShowMenu(false)}>
                                             Products
-                                        </Link>
-                                        <Link to="/about" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setShowMenu(false)}>
+                                        </NavLink>
+                                        <NavLink to="/about" className={({ isActive }) => `block px-4 py-2 text-sm ${isActive ? 'text-black font-medium' : 'text-gray-700'} hover:bg-gray-50 transition-colors`} onClick={() => setShowMenu(false)}>
                                             About
-                                        </Link>
-                                        <Link to="/contact" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setShowMenu(false)}>
+                                        </NavLink>
+                                        <NavLink to="/contact" className={({ isActive }) => `block px-4 py-2 text-sm ${isActive ? 'text-black font-medium' : 'text-gray-700'} hover:bg-gray-50 transition-colors`} onClick={() => setShowMenu(false)}>
                                             Contact
-                                        </Link>
-                                        <Link to="/orders" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-50 transition-colors" onClick={() => setShowMenu(false)}>
+                                        </NavLink>
+                                        <NavLink to="/orders" className={({ isActive }) => `block px-4 py-2 text-sm ${isActive ? 'text-black font-medium' : 'text-gray-700'} hover:bg-gray-50 transition-colors`} onClick={() => setShowMenu(false)}>
                                             My Orders
-                                        </Link>
+                                        </NavLink>
                                     </div>
                                 </motion.div>
                             )}

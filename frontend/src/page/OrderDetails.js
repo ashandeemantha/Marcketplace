@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import Header from "../component/Header";
 
 const OrderDetails = () => {
   const [order, setOrder] = useState(null);
@@ -39,7 +38,7 @@ const OrderDetails = () => {
         <p className="text-red-500 text-lg">{error}</p>
         <button
           onClick={() => navigate("/orders")}
-          className="mt-4 px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700"
+          className="mt-4 px-4 py-2 bg-blue-400 text-white rounded hover:bg-blue-700"
         >
           Back to Orders
         </button>
@@ -48,11 +47,11 @@ const OrderDetails = () => {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <Header />
+      
       <div className="container mx-auto px-4 py-8 max-w-4xl">
         <button
           onClick={() => navigate("/orders")}
-          className="flex items-center text-blue-600 hover:text-blue-800 mb-6"
+          className="flex items-center text-blue-600 hover:text-green-500 mb-6"
         >
           <svg
             className="w-5 h-5 mr-1"

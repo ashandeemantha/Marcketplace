@@ -198,7 +198,7 @@ const Home = () => {
   const prevProduct = () => slideProductRef.current.scrollLeft -= 300;
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-200">
       {/* Hero Section with Quality Check */}
       <div className="relative overflow-hidden">
         <div 
@@ -246,7 +246,7 @@ const Home = () => {
       </div>
 
       {/* Value Propositions */}
-      <div className="bg-white py-12">
+      <div className="bg-gray-200 py-12">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
             <div className="bg-gray-50 p-6 rounded-xl text-center">
@@ -282,7 +282,7 @@ const Home = () => {
       </div>
 
       {/* Featured Categories */}
-      <div className="py-12 bg-gray-50">
+      <div className="py-12 bg-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex flex-col md:flex-row justify-between items-center mb-8">
             <h2 className="text-3xl font-bold text-gray-900 mb-4 md:mb-0">Shop by Category</h2>
@@ -325,7 +325,7 @@ const Home = () => {
       </div>
 
       {/* Seasonal Specials */}
-      <div className="py-12 bg-white">
+      <div className="py-12 bg-gray-200">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <h2 className="text-3xl font-bold text-gray-900 mb-8">Seasonal Specials</h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8">

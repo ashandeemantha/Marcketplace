@@ -50,7 +50,7 @@ const Menu = () => {
   ];
 
   return (
-    <div className='p-2 md:p-8 bg-gray-50 min-h-screen'>
+    <div className='p-2 md:p-8 bg-gray-200 min-h-screen'>
       <div className='w-full max-w-6xl m-auto bg-white rounded-xl shadow-md overflow-hidden md:flex'>
         {/* Product Images */}
         <div className='md:w-1/2 p-4'>
